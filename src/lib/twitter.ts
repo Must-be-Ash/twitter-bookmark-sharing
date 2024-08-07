@@ -1,4 +1,4 @@
-import { TwitterApi } from 'twitter-api-v2';
+import TwitterProvider from "next-auth/providers/twitter";
 
 const client = new TwitterApi(process.env.TWITTER_BEARER_TOKEN!);
 
