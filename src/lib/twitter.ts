@@ -1,8 +1,8 @@
-import { TwitterApi } from 'twitter-api-v2';
+import { TwitterApi, BookmarksV2Paginator } from 'twitter-api-v2';
 
 const client = new TwitterApi(process.env.TWITTER_BEARER_TOKEN!);
 
-export async function getBookmarks(userId: string) {
+export async function getBookmarks(userId: string): Promise<BookmarksV2Paginator> {
   try {
     const bookmarks = await client.v2.bookmarks(userId, {
       'tweet.fields': ['text', 'author_id', 'created_at'],

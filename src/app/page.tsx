@@ -6,7 +6,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-4">
         <span className="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-          Grow your email list
+        Grow your email list
         </span>{' '}
         by sharing what you're interested in
       </h1>
