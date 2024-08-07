@@ -1,10 +1,11 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
-import { SessionProviderWrapper } from './SessionProviderWrapper'
+import { Metadata } from 'next'
+import { SessionProviderWrapper } from '@/app/SessionProviderWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Twitter Bookmark Sharing',
   description: 'Share your Twitter bookmarks as a weekly newsletter',
 }

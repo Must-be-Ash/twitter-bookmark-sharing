@@ -1,11 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    experimental: {
-      appDir: true,
-    },
+    reactStrictMode: true,
     images: {
-      domains: ['pbs.twimg.com'],
+      domains: ['pbs.twimg.com'], // Add other domains if needed
     },
   }
   
-  export default nextConfig
+  export default nextConfig;

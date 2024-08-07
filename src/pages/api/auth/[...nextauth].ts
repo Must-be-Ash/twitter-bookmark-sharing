@@ -1,16 +1,9 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
 
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      image: string;
-      username: string;
-    };
   }
 }
 
@@ -23,21 +16,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token;
-        token.username = (profile as any).data.username;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       session.accessToken = token.accessToken as string;
-      session.user.username = token.username as string;
       return session;
     },
   },
-  pages: {
-    signIn: '/auth/signin',
-  },
   debug: process.env.NODE_ENV === "development",
 };
+
+export default NextAuth(authOptions);
