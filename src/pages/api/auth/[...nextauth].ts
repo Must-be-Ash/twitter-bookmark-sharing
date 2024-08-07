@@ -1,33 +1,40 @@
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import NextAuth from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
+import { NextApiRequest, NextApiResponse } from "next";
 
-declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
-  }
-}
-
-export const authOptions: NextAuthOptions = {
-  providers: [
-    TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID!,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-      version: "2.0",
-    }),
-  ],
-  callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.accessToken = account.access_token;
-      }
-      return token;
+export default async (req: NextApiRequest, res: NextApiResponse) =>
+  NextAuth(req, res, {
+    providers: [
+      TwitterProvider({
+        clientId: process.env.TWITTER_CLIENT_ID,
+        clientSecret: process.env.TWITTER_CLIENT_SECRET,
+      }),
+    ],
+    callbacks: {
+      async signIn(user, account, profile) {
+        return true;
+      },
+      async redirect({ url, baseUrl }) {
+        // Extract username from user profile if necessary
+        const username = user.name || user.username; // Adjust this according to your user object
+        return baseUrl + `/${username}`;
+      },
+      async session({ session, token }) {
+        session.user = token.user;
+        return session;
+      },
+      async jwt({ token, user, account, profile }) {
+        if (user) {
+          token.user = user;
+        }
+        return token;
+      },
     },
-    async session({ session, token, user }) {
-      session.accessToken = token.accessToken as string;
-      return session;
+    pages: {
+      signIn: "/auth/signin",
+      signOut: "/auth/signout",
+      error: "/auth/error",
+      verifyRequest: "/auth/verify-request",
+      newUser: null,
     },
-  },
-  debug: process.env.NODE_ENV === "development",
-};
-
-export default NextAuth(authOptions);
+  });
