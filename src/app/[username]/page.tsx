@@ -3,54 +3,80 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import confetti from 'canvas-confetti';
+import { getUserByUsername } from '@/lib/twitter';
 
 export default function UserPage() {
   const params = useParams();
-  const username = params?.username as string | undefined;
+  const username = params?.username as string;
+  const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
-    console.log('UserPage mounted. Username:', username);
+    console.log("UserPage mounted. Username:", username);
     confetti();
+
+    async function fetchUserData() {
+      if (username) {
+        try {
+          const data = await getUserByUsername(username);
+          setUserData(data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    }
+
+    fetchUserData();
   }, [username]);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Subscribing with email:', email);
-    setIsSubscribed(true);
-    confetti();
-  };
-
-  const handleShare = () => {
-    if (username) {
-      const url = `${process.env.NEXT_PUBLIC_APP_URL}/${username}`;
-      navigator.clipboard.writeText(url);
-      setIsLinkCopied(true);
-      setTimeout(() => setIsLinkCopied(false), 2000);
-      console.log('Sharing URL:', url);
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, username }),
+      });
+      if (response.ok) {
+        setIsSubscribed(true);
+        confetti();
+      } else {
+        throw new Error('Subscription failed');
+      }
+    } catch (error) {
+      console.error('Error subscribing:', error);
     }
   };
 
-  if (!username) {
-    console.log('No username found in params');
-    return <div>User not found</div>;
+  const handleShare = () => {
+    const url = `${window.location.origin}/${username}`;
+    navigator.clipboard.writeText(url);
+    setIsLinkCopied(true);
+    setTimeout(() => setIsLinkCopied(false), 2000);
+  };
+
+  if (!userData) {
+    return <div>Loading user data...</div>;
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
       <main className="flex-grow flex flex-col items-center justify-center p-4">
         <Image
-          src="/placeholder-avatar.png"
+          src={userData.profile_image_url || "/placeholder-avatar.png"}
           alt="User avatar"
           width={100}
           height={100}
           className="rounded-full mb-4"
         />
-        <h1 className="text-2xl font-bold mb-2">{username}</h1>
-        <p className="text-gray-600 italic mb-8">User bio goes here</p>
+        <h1 className="text-2xl font-bold mb-2">{userData.name}</h1>
+        <p className="text-gray-600 italic mb-8">{userData.description || "No bio available"}</p>
         
         {!isSubscribed ? (
           <form onSubmit={handleSubscribe} className="w-full max-w-md">
@@ -94,19 +120,6 @@ export default function UserPage() {
           <span className="mt-1">{isLinkCopied ? 'Copied!' : 'Share'}</span>
         </button>
       </main>
-      <footer className="py-4 text-center">
-        <p>
-          Built with Claude by{' '}
-          <a
-            href="https://x.com/Must_be_Ash"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-          >
-            @must_be_ash
-          </a>
-        </p>
-      </footer>
     </div>
   );
 }
