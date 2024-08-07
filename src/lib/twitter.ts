@@ -17,15 +17,15 @@ export async function getUserByUsername(username: string) {
   }
 }
 
-export async function getBookmarks(userId: string) {
+export async function getBookmarks() {
   try {
-    const bookmarks = await client.v2.bookmarks(userId, {
+    const bookmarks = await client.v2.bookmarks({
       expansions: ['author_id'],
       'tweet.fields': ['created_at', 'public_metrics', 'text'],
       'user.fields': ['name', 'username', 'profile_image_url'],
     });
 
-    console.log(`Fetched ${bookmarks.data.length} bookmarks for user ${userId}`);
+    console.log(`Fetched ${bookmarks.data.length} bookmarks`);
     return bookmarks;
   } catch (error) {
     console.error('Error fetching bookmarks:', error);

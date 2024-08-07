@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '@/lib/mongodb';
-import { getUserByUsername } from '@/lib/twitter';
+import { getBookmarks, getUserByUsername } from '@/lib/twitter';
 import { sendWeeklyNewsletter } from '@/lib/email';
-import { TwitterApi } from 'twitter-api-v2';
-
-const client = new TwitterApi(process.env.TWITTER_BEARER_TOKEN!);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -15,11 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const users = await db.collection('users').find().toArray();
 
       for (const user of users) {
-        const bookmarks = await client.v2.bookmarks(user.id, {
-          expansions: ['author_id'],
-          'tweet.fields': ['created_at', 'public_metrics', 'text'],
-          'user.fields': ['name', 'username', 'profile_image_url'],
-        });
+        const bookmarks = await getBookmarks();
         const subscribers = await db.collection('subscriptions').find({ username: user.username }).toArray();
 
         const emailContent = `
