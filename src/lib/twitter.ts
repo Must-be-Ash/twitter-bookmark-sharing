@@ -25,7 +25,7 @@ export async function getBookmarks() {
       'user.fields': ['name', 'username', 'profile_image_url'],
     });
 
-    const bookmarkCount = bookmarks.data ? bookmarks.data.length : 0;
+    const bookmarkCount = bookmarks.meta?.result_count ?? 0;
     console.log(`Fetched ${bookmarkCount} bookmarks`);
     return bookmarks;
   } catch (error) {

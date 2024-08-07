@@ -18,14 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const emailContent = `
           <h1>Weekly Twitter Bookmarks from ${user.name}</h1>
           <ul>
-            ${bookmarks.data && bookmarks.data.length > 0 ? 
-              bookmarks.data.map((bookmark: any) => `
+            ${bookmarks.data && bookmarks.meta?.result_count ? 
+              bookmarks.data.reduce((acc: string, bookmark: any) => acc + `
                 <li>
                   <a href="https://twitter.com/user/status/${bookmark.id}">${bookmark.text}</a>
                   <br>
                   by ${bookmark.author?.name} (@${bookmark.author?.username})
                 </li>
-              `).join('') : 
+              `, '') : 
               '<li>No bookmarks this week.</li>'
             }
           </ul>
