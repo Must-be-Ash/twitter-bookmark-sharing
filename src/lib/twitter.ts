@@ -1,8 +1,8 @@
-import { TwitterApi, BookmarksV2Paginator } from 'twitter-api-v2';
+import { TwitterApi } from 'twitter-api-v2';
 
 const client = new TwitterApi(process.env.TWITTER_BEARER_TOKEN!);
 
-export async function getBookmarks(userId: string): Promise<BookmarksV2Paginator> {
+export async function getBookmarks(userId: string) {
   try {
     const bookmarks = await client.v2.bookmarks(userId, {
       'tweet.fields': ['text', 'author_id', 'created_at'],
@@ -10,7 +10,7 @@ export async function getBookmarks(userId: string): Promise<BookmarksV2Paginator
       'user.fields': ['name', 'username'],
     });
 
-    console.log(`Fetched ${bookmarks.data?.length ?? 0} bookmarks for user ${userId}`);
+    console.log(`Fetched ${bookmarks.data.length} bookmarks for user ${userId}`);
 
     return bookmarks;
   } catch (error) {
