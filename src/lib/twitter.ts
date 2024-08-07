@@ -10,7 +10,8 @@ export async function getBookmarks() {
       'user.fields': ['name', 'username', 'profile_image_url'],
     });
 
-    console.log(`Fetched ${bookmarks.data.length} bookmarks`);
+    const bookmarkCount = Array.isArray(bookmarks.data) ? bookmarks.data.length : 0;
+    console.log(`Fetched ${bookmarkCount} bookmarks`);
     return bookmarks;
   } catch (error) {
     console.error('Error fetching bookmarks:', error);

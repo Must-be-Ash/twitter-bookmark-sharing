@@ -25,11 +25,11 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account, profile }: any) {
       console.log("Sign In Callback Started", { user, account, profile });
       try {
         if (profile) {
-          user.username = profile.screen_name;
+          user.username = profile.data.username;
         }
         console.log("Sign In Successful");
         return true;
@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
     },
-    async session({ session, user }) {
+    async session({ session, user }: { session: any; user: any }) {
       console.log("Session Callback Started", { session, user });
       try {
         if (session.user) {

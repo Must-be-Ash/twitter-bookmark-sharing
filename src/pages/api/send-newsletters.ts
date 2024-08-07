@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const users = await db.collection('users').find().toArray();
 
       for (const user of users) {
-        const bookmarks = await getBookmarks(user.id);
+        const bookmarks = await getBookmarks();
         const subscribers = await db.collection('subscriptions').find({ username: user.username }).toArray();
 
         const emailContent = `
