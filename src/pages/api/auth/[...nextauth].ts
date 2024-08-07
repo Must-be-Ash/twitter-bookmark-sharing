@@ -1,9 +1,10 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../lib/prisma";
 
-export default async function auth(req: NextApiRequest, res: NextApiResponse) {
+export default function auth(req: NextApiRequest, res: NextApiResponse) {
   return NextAuth(req, res, {
     providers: [
       TwitterProvider({
