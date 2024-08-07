@@ -1,11 +1,26 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const handleSignIn = async () => {
-    await signIn('twitter');
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await signIn('twitter', { callbackUrl: '/dashboard' });
+      if (result?.error) {
+        setError('Failed to sign in. Please try again.');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -19,10 +34,12 @@ export default function Home() {
         </p>
         <button
           onClick={handleSignIn}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 animate-pulse"
+          disabled={isLoading}
+          className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'animate-pulse'}`}
         >
-          Login with Twitter
+          {isLoading ? 'Connecting...' : 'Login with Twitter'}
         </button>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
       </main>
       <footer className="py-4 text-center">
         <p>
