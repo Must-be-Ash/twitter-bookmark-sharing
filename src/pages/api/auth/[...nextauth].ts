@@ -1,7 +1,17 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
+
+// Extend the Session interface
+interface ExtendedSession extends Session {
+  user: {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -16,7 +26,6 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       console.log("Sign in callback started");
       try {
-        // You can add custom logic here, e.g., creating a user in your database
         console.log("User:", user);
         console.log("Account:", account);
         console.log("Profile:", profile);
@@ -26,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
     },
-    async session({ session, user }) {
+    async session({ session, user }: { session: ExtendedSession; user: User }) {
       console.log("Session callback started");
       try {
         if (session.user) {
