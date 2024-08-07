@@ -17,11 +17,13 @@ export async function getUserByUsername(username: string) {
   }
 }
 
-export async function getBookmarks(): Promise<{
+export interface BookmarksResponse {
   data: TweetV2[];
   includes: { users: UserV2[] };
   meta: { result_count: number };
-}> {
+}
+
+export async function getBookmarks(): Promise<BookmarksResponse> {
   try {
     const bookmarks = await client.v2.bookmarks({
       expansions: ['author_id'],
@@ -31,7 +33,14 @@ export async function getBookmarks(): Promise<{
 
     const bookmarkCount = bookmarks.meta?.result_count ?? 0;
     console.log(`Fetched ${bookmarkCount} bookmarks`);
-    return bookmarks;
+
+    return {
+      data: Array.isArray(bookmarks.data) ? bookmarks.data : [],
+      includes: bookmarks.includes ?? { users: [] },
+      meta: {
+        result_count: bookmarkCount
+      }
+    };
   } catch (error) {
     console.error('Error fetching bookmarks:', error);
     throw error;

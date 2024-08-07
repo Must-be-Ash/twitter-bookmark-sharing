@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '@/lib/mongodb';
-import { getBookmarks, getUserByUsername } from '@/lib/twitter';
+import { getBookmarks, getUserByUsername, BookmarksResponse } from '@/lib/twitter';
 import { sendWeeklyNewsletter } from '@/lib/email';
 import { TweetV2, UserV2 } from 'twitter-api-v2';
 
@@ -13,11 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const users = await db.collection('users').find().toArray();
 
       for (const user of users) {
-        const bookmarks = await getBookmarks();
+        const bookmarks: BookmarksResponse = await getBookmarks();
         const subscribers = await db.collection('subscriptions').find({ username: user.username }).toArray();
 
         let bookmarkListItems = '<li>No bookmarks this week.</li>';
-        if (bookmarks.data && bookmarks.meta?.result_count > 0) {
+        if (bookmarks.data && bookmarks.meta.result_count > 0) {
           bookmarkListItems = bookmarks.data.map((bookmark: TweetV2) => {
             const author = bookmarks.includes.users.find(u => u.id === bookmark.author_id);
             return `
