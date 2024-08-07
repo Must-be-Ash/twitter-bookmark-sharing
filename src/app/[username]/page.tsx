@@ -1,42 +1,31 @@
-'use client';
-
-import { useSession } from "next-auth/react";
-import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-interface UserData {
-  profile_image_url?: string;
-  name?: string;
-  description?: string;
-}
-
-export default function UserPage() {
-  const { data: session } = useSession();
-  const params = useParams();
-  const [userData, setUserData] = useState<UserData | null>(null);
+export default function UserProfile() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { username } = router.query;
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
-    async function fetchUserData() {
-      const username = params?.username;
-      if (!username) {
-        console.error('Username is undefined');
-        return;
-      }
-
-      const response = await fetch(`/api/user/${username}`);
-      if (response.ok) {
-        const data = await response.json();
-        setUserData(data);
-      } else {
-        console.error('Failed to fetch user data');
-      }
+    if (status === 'authenticated' && username) {
+      fetch(`/api/user/${username}`)
+        .then(res => res.json())
+        .then(data => setUserData(data))
+        .catch(err => console.error('Error fetching user data:', err));
     }
+  }, [status, username]);
 
-    if (session?.accessToken) {
-      fetchUserData();
-    }
-  }, [session, params]);
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (!session) {
+    router.push('/');
+    return null;
+  }
 
   if (!userData) {
     return <div>Loading user data...</div>;
@@ -44,12 +33,11 @@ export default function UserPage() {
 
   return (
     <div>
-      {userData.profile_image_url && (
-        <Image src={userData.profile_image_url} alt={userData.name || 'User'} width={100} height={100} />
-      )}
-      <h1>{userData.name || 'User'}</h1>
-      <p>{userData.description || 'No description available'}</p>
-      {/* Add more user information and functionality here */}
+      <Image src={userData.profile_image_url} alt={userData.name} width={100} height={100} />
+      <h1>{userData.name}</h1>
+      <p>@{userData.username}</p>
+      <p>{userData.description}</p>
+      {/* Add more profile information and functionality here */}
     </div>
   );
 }
