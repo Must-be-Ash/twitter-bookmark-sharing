@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../lib/prisma"; // Adjusted import path
 import { getSession } from "next-auth/react";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
