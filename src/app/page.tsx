@@ -13,8 +13,8 @@ export default function LandingPage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleTwitterLogin = async () => {
-    window.location.href = '/api/auth/signin/twitter';
+  const handleTwitterLogin = () => {
+    window.location.href = 'https://twitter.com/i/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=read_public_metrics';
   };
 
   return (
@@ -23,14 +23,14 @@ export default function LandingPage() {
         <img src="/bookmark.png" alt="Bookmark" className="w-1/4 h-1/4 ml-10 mt-10" />
         <img src="/email.png" alt="Email" className="w-1/4 h-1/4 mr-10 mb-10" />
         <svg className="absolute top-0 left-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-          <path d="M0 20 Q 10 30, 20 20 T 40 20 T 60 20 T 80 20 T 100 20" stroke="#d3d3d3" strokeWidth="1" fill="none" />
-          <path d="M0 50 Q 10 60, 20 50 T 40 50 T 60 50 T 80 50 T 100 50" stroke="#d3d3d3" strokeWidth="1" fill="none" />
-          <path d="M0 80 Q 10 90, 20 80 T 40 80 T 60 80 T 80 80 T 100 80" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+          <path d="M100 20 Q 90 30, 80 20 T 60 20 T 40 20 T 20 20 T 0 20" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+          <path d="M100 50 Q 90 60, 80 50 T 60 50 T 40 50 T 20 50 T 0 50" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+          <path d="M100 80 Q 90 90, 80 80 T 60 80 T 40 80 T 20 80 T 0 80" stroke="#d3d3d3" strokeWidth="1" fill="none" />
         </svg>
       </div>
       <main className="flex-grow flex flex-col items-center justify-center p-4 z-10">
         <h1 className="text-4xl font-bold mb-4 text-center" style={{ color: '#333333' }}>
-          Share your bookmarks and <span id="dynamic-gradient" className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text transition-all duration-3000">grow your email list</span>
+          Share your bookmarks and <span id="dynamic-gradient" className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-transparent bg-clip-text transition-all duration-3000">grow your email list</span>
         </h1>
         <p className="text-gray-600 text-center mb-14 max-w-md">
           Share your Twitter bookmarks as a weekly newsletter. Think Pinterest but for reading material instead of images.
