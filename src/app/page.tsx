@@ -13,17 +13,8 @@ export default function LandingPage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleTwitterLogin = async () => {
-    const res = await fetch('/api/auth/signin/twitter', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    }
+  const handleTwitterLogin = () => {
+    window.location.href = '/api/auth/signin';
   };
 
   return (
@@ -31,6 +22,12 @@ export default function LandingPage() {
       <div className="absolute inset-0 opacity-10 z-0 flex justify-between items-center">
         <img src="/bookmark.png" alt="Bookmark" className="w-1/4 h-1/4 ml-10 mt-10" />
         <img src="/email.png" alt="Email" className="w-1/4 h-1/4 mr-10 mb-10" />
+        <svg className="absolute top-0 left-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <path d="M10 10 Q 20 20, 30 10 T 50 10 T 70 10 T 90 10" stroke="black" strokeWidth="0.5" fill="none" />
+          <path d="M10 30 Q 20 40, 30 30 T 50 30 T 70 30 T 90 30" stroke="black" strokeWidth="0.5" fill="none" />
+          <path d="M10 50 Q 20 60, 30 50 T 50 50 T 70 50 T 90 50" stroke="black" strokeWidth="0.5" fill="none" />
+          <path d="M10 70 Q 20 80, 30 70 T 50 70 T 70 70 T 90 70" stroke="black" strokeWidth="0.5" fill="none" />
+        </svg>
       </div>
       <main className="flex-grow flex flex-col items-center justify-center p-4 z-10">
         <h1 className="text-4xl font-bold mb-4 text-center" style={{ color: '#333333' }}>
@@ -63,13 +60,13 @@ export default function LandingPage() {
             box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6, 0 0 15px #3b82f6, 0 0 20px #3b82f6;
           }
           to {
-            box-shadow: 0 0 10px #60a5fa, 0 0 20px #60a5fa, 0 0 30px #60a5fa, 0 0 40px #60a5fa;
+            box-shadow: 0 0 5px #60a5fa, 0 0 10px #60a5fa, 0 0 15px #60a5fa, 0 0 20px #60a5fa;
           }
         }
 
         #dynamic-gradient {
-          background-size: 400% 400%;
-          animation: gradient 15s ease infinite;
+          background-size: 200% 200%;
+          animation: gradient 10s linear infinite;
         }
 
         @keyframes gradient {
