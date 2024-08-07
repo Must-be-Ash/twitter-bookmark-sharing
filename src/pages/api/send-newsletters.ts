@@ -15,19 +15,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const bookmarks = await getBookmarks();
         const subscribers = await db.collection('subscriptions').find({ username: user.username }).toArray();
 
+        let bookmarkListItems = '<li>No bookmarks this week.</li>';
+        if (bookmarks.data && bookmarks.meta?.result_count > 0) {
+          bookmarkListItems = bookmarks.data.map((bookmark: any) => `
+            <li>
+              <a href="https://twitter.com/user/status/${bookmark.id}">${bookmark.text}</a>
+              <br>
+              by ${bookmark.author?.name} (@${bookmark.author?.username})
+            </li>
+          `).join('');
+        }
+
         const emailContent = `
           <h1>Weekly Twitter Bookmarks from ${user.name}</h1>
           <ul>
-            ${bookmarks.data && bookmarks.meta?.result_count ? 
-              bookmarks.data.reduce((acc: string, bookmark: any) => acc + `
-                <li>
-                  <a href="https://twitter.com/user/status/${bookmark.id}">${bookmark.text}</a>
-                  <br>
-                  by ${bookmark.author?.name} (@${bookmark.author?.username})
-                </li>
-              `, '') : 
-              '<li>No bookmarks this week.</li>'
-            }
+            ${bookmarkListItems}
           </ul>
         `;
 
