@@ -1,15 +1,17 @@
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
 
-// Extend the Session interface
-interface ExtendedSession extends Session {
-  user: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
+// Extend the built-in session types
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    }
   }
 }
 
@@ -35,7 +37,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
     },
-    async session({ session, user }: { session: ExtendedSession; user: User }) {
+    async session({ session, user }) {
       console.log("Session callback started");
       try {
         if (session.user) {
