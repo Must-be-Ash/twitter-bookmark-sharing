@@ -1,19 +1,12 @@
 import { TwitterApi } from 'twitter-api-v2';
 
-export interface UserData {
-    profile_image_url?: string;
-    name?: string;
-    description?: string;
-    username: string;
-  }
-
 export interface BookmarksResponse {
   data: any[];
   includes: { users: any[] };
   meta: { result_count: number };
 }
 
-export async function getUserByUsername(accessToken: string, username: string): Promise<UserData> {
+export async function getUserByUsername(accessToken: string, username: string) {
   const client = new TwitterApi(accessToken);
   try {
     console.log(`Fetching user data for username: ${username}`);

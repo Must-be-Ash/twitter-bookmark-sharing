@@ -4,13 +4,6 @@ import TwitterProvider from "next-auth/providers/twitter";
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      image: string;
-      username: string;
-    }
   }
 }
 
@@ -23,18 +16,14 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }: any) {
+    async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token;
-        token.username = profile?.data?.username;
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: any }) {
-      session.accessToken = token.accessToken;
-      if (session.user) {
-        session.user.username = token.username;
-      }
+    async session({ session, token }) {
+      session.accessToken = token.accessToken as string;
       return session;
     },
   },

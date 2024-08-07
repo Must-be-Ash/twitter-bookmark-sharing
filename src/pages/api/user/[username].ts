@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { getUserByUsername, UserData } from '@/lib/twitter';
+import { getUserByUsername } from '@/lib/twitter';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req });
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     try {
-      const userData: UserData = await getUserByUsername(session.accessToken, username as string);
+      const userData = await getUserByUsername(session.accessToken, username as string);
       res.status(200).json(userData);
     } catch (error) {
       console.error('Error fetching user data:', error);
