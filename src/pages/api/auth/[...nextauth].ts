@@ -10,6 +10,7 @@ declare module "next-auth" {
       name?: string | null;
       email?: string | null;
       image?: string | null;
+      username?: string | null;
     }
   }
 }
@@ -27,7 +28,9 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       console.log("Sign In Callback Started", { user, account, profile });
       try {
-        // You can add custom logic here if needed
+        if (profile) {
+          user.username = profile.screen_name;
+        }
         console.log("Sign In Successful");
         return true;
       } catch (error) {
@@ -40,6 +43,7 @@ export const authOptions: NextAuthOptions = {
       try {
         if (session.user) {
           session.user.id = user.id;
+          session.user.username = user.username;
         }
         console.log("Session Callback Completed");
         return session;
