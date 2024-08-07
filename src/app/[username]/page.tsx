@@ -10,22 +10,37 @@ export default function UserProfile() {
   const params = useParams();
   const username = params.username as string;
   const [userData, setUserData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('UserProfile - Session status:', status);
+    console.log('UserProfile - Session data:', session);
+    console.log('UserProfile - Username param:', username);
+
     if (status === 'authenticated' && username) {
       fetch(`/api/user/${username}`)
         .then(res => res.json())
-        .then(data => setUserData(data))
-        .catch(err => console.error('Error fetching user data:', err));
+        .then(data => {
+          console.log('UserProfile - Fetched user data:', data);
+          setUserData(data);
+        })
+        .catch(err => {
+          console.error('Error fetching user data:', err);
+          setError('Failed to fetch user data');
+        });
     }
-  }, [status, username]);
+  }, [status, username, session]);
 
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
 
-  if (!session) {
+  if (status === 'unauthenticated') {
     return <div>Please sign in to view this profile.</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   if (!userData) {
