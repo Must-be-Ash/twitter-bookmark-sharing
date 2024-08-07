@@ -5,7 +5,8 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 
 export default function UserPage() {
-  const { username } = useParams();
+  const params = useParams();
+  const username = params.username as string;
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
