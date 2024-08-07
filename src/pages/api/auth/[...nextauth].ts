@@ -56,18 +56,7 @@ export const authOptions: NextAuthOptions = {
     async linkAccount(message) { console.log("Link Account Event", message) },
     async session(message) { console.log("Session Event", message) },
   },
-  logger: {
-    error(code, metadata) {
-      console.error(code, metadata)
-    },
-    warn(code) {
-      console.warn(code)
-    },
-    debug(code, metadata) {
-      console.debug(code, metadata)
-    }
-  },
-  debug: true,
+  debug: process.env.NODE_ENV === 'development',
 };
 
 export default NextAuth(authOptions);
