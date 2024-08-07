@@ -1,12 +1,14 @@
+'use client';
+
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export default function UserProfile() {
   const { data: session, status } = useSession();
-  const router = useRouter();
-  const { username } = router.query;
+  const params = useParams();
+  const username = params.username as string;
   const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
@@ -23,8 +25,7 @@ export default function UserProfile() {
   }
 
   if (!session) {
-    router.push('/');
-    return null;
+    return <div>Please sign in to view this profile.</div>;
   }
 
   if (!userData) {
@@ -37,7 +38,6 @@ export default function UserProfile() {
       <h1>{userData.name}</h1>
       <p>@{userData.username}</p>
       <p>{userData.description}</p>
-      {/* Add more profile information and functionality here */}
     </div>
   );
 }
