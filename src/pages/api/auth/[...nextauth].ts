@@ -1,21 +1,33 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getUserByUsername } from '@/lib/twitter';
+import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import TwitterProvider from "next-auth/providers/twitter";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { username } = req.query;
-
-  if (req.method === 'GET') {
-    try {
-      console.log(`Fetching user data for username: ${username}`);
-      const userData = await getUserByUsername(username as string);
-      console.log(`User data fetched:`, userData);
-      res.status(200).json(userData);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      res.status(500).json({ error: 'Failed to fetch user data' });
-    }
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
   }
 }
+
+export const authOptions: NextAuthOptions = {
+  providers: [
+    TwitterProvider({
+      clientId: process.env.TWITTER_CLIENT_ID!,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
+      version: "2.0",
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.accessToken = token.accessToken as string;
+      return session;
+    },
+  },
+  debug: process.env.NODE_ENV === "development",
+};
+
+export default NextAuth(authOptions);

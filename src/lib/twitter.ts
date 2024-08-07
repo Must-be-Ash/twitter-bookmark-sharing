@@ -1,8 +1,13 @@
-import { TwitterApi, TweetV2, UserV2 } from 'twitter-api-v2';
+import { TwitterApi } from 'twitter-api-v2';
 
-const client = new TwitterApi(process.env.TWITTER_BEARER_TOKEN!);
+export interface BookmarksResponse {
+  data: any[];
+  includes: { users: any[] };
+  meta: { result_count: number };
+}
 
-export async function getUserByUsername(username: string) {
+export async function getUserByUsername(accessToken: string, username: string) {
+  const client = new TwitterApi(accessToken);
   try {
     console.log(`Fetching user data for username: ${username}`);
     const user = await client.v2.userByUsername(username, {
@@ -17,13 +22,8 @@ export async function getUserByUsername(username: string) {
   }
 }
 
-export interface BookmarksResponse {
-  data: TweetV2[];
-  includes: { users: UserV2[] };
-  meta: { result_count: number };
-}
-
-export async function getBookmarks(): Promise<BookmarksResponse> {
+export async function getBookmarks(accessToken: string): Promise<BookmarksResponse> {
+  const client = new TwitterApi(accessToken);
   try {
     const bookmarks = await client.v2.bookmarks({
       expansions: ['author_id'],

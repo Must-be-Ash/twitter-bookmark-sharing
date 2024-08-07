@@ -1,11 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from 'next-auth/react';
 import clientPromise from '@/lib/mongodb';
-import { getBookmarks, getUserByUsername, BookmarksResponse } from '@/lib/twitter';
+import { getBookmarks, BookmarksResponse } from '@/lib/twitter';
 import { sendWeeklyNewsletter } from '@/lib/email';
-import { TweetV2, UserV2 } from 'twitter-api-v2';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
+    const session = await getSession({ req });
+    if (!session || !session.accessToken) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
     try {
       const mongoClient = await clientPromise;
       const db = mongoClient.db();
@@ -13,12 +18,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const users = await db.collection('users').find().toArray();
 
       for (const user of users) {
-        const bookmarks: BookmarksResponse = await getBookmarks();
+        const bookmarks: BookmarksResponse = await getBookmarks(session.accessToken);
         const subscribers = await db.collection('subscriptions').find({ username: user.username }).toArray();
 
         let bookmarkListItems = '<li>No bookmarks this week.</li>';
-        if (bookmarks.data && bookmarks.meta.result_count > 0) {
-          bookmarkListItems = bookmarks.data.map((bookmark: TweetV2) => {
+        if (bookmarks.data.length > 0) {
+          bookmarkListItems = bookmarks.data.map((bookmark: any) => {
             const author = bookmarks.includes.users.find(u => u.id === bookmark.author_id);
             return `
               <li>
