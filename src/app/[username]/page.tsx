@@ -9,11 +9,13 @@ import confetti from 'canvas-confetti';
 export default function UserPage() {
   const params = useParams();
   const username = params?.username as string;
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
   const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log("UserPage mounted. Username:", username);
@@ -22,6 +24,7 @@ export default function UserPage() {
     async function fetchUserData() {
       if (username) {
         try {
+          setLoading(true);
           const response = await fetch(`/api/user/${username}`);
           if (response.ok) {
             const data = await response.json();
@@ -31,6 +34,9 @@ export default function UserPage() {
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
+          setError('Failed to load user data. Please try again.');
+        } finally {
+          setLoading(false);
         }
       }
     }
@@ -65,10 +71,18 @@ export default function UserPage() {
     setTimeout(() => setIsLinkCopied(false), 2000);
   };
 
-  if (!userData) {
+  if (loading) {
     return <div>Loading user data...</div>;
   }
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!userData) {
+    return <div>No user data available.</div>;
+  }
+  
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
       <main className="flex-grow flex flex-col items-center justify-center p-4">
