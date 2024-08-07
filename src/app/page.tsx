@@ -1,58 +1,26 @@
-'use client';
-
-import { useState } from 'react';
-import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import Head from 'next/head';
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSignIn = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const result = await signIn('twitter', { callbackUrl: '/dashboard' });
-      if (result?.error) {
-        setError('Failed to sign in. Please try again.');
-      }
-    } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-white text-gray-900">
-      <main className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mb-4">
-          Grow your email list by sharing your Twitter bookmarks
+    <div className="flex flex-col min-h-screen">
+      <Head>
+        <title>Share your bookmarks and grow your email list</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className="flex-grow flex flex-col items-center justify-center text-center p-4">
+        <h1 className="text-4xl font-bold mb-4">
+          Share your bookmarks and <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">grow your email list</span>
         </h1>
-        <p className="text-xl sm:text-2xl text-center mb-8">
-          Share bookmarks as a weekly newsletter. Think Pinterest but for reading material.
-        </p>
-        <button
-          onClick={handleSignIn}
-          disabled={isLoading}
-          className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'animate-pulse'}`}
-        >
-          {isLoading ? 'Connecting...' : 'Login with Twitter'}
+        <p className="text-gray-600 mb-8">Share your Twitter bookmarks as a weekly newsletter. Think Pinterest but for reading material instead of images.</p>
+        <button className="bg-gradient-to-r from-blue-400 to-purple-600 text-white py-2 px-4 rounded-full flex items-center shadow-lg transform hover:scale-105 transition-transform">
+          <img src="/twitter-icon.svg" alt="Twitter" className="h-6 w-6 mr-2" />
+          Log in with Twitter
         </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
       </main>
-      <footer className="py-4 text-center">
-        <p>
-          Built with Claude by{' '}
-          <a
-            href="https://x.com/Must_be_Ash"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-          >
-            @must_be_ash
-          </a>
-        </p>
+
+      <footer className="bg-gray-200 text-center p-4">
+        Built with Claude by <a href="https://x.com/Must_be_Ash" className="text-blue-600">@must_be_ash</a>
       </footer>
     </div>
   );
