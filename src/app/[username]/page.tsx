@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 
 export default function UserPage() {
   const params = useParams();
-  const username = params.username as string;
+  const username = params?.username as string | undefined;
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
@@ -18,11 +18,17 @@ export default function UserPage() {
   };
 
   const handleShare = () => {
-    const url = `${process.env.NEXT_PUBLIC_APP_URL}/${username}`;
-    navigator.clipboard.writeText(url);
-    setIsLinkCopied(true);
-    setTimeout(() => setIsLinkCopied(false), 2000);
+    if (username) {
+      const url = `${process.env.NEXT_PUBLIC_APP_URL}/${username}`;
+      navigator.clipboard.writeText(url);
+      setIsLinkCopied(true);
+      setTimeout(() => setIsLinkCopied(false), 2000);
+    }
   };
+
+  if (!username) {
+    return <div>User not found</div>;
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
