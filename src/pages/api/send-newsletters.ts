@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '@/lib/mongodb';
-import { getBookmarks, getUserByUsername } from '@/lib/twitter';
+import { getBookmarks } from '@/lib/twitter';
 import { sendWeeklyNewsletter } from '@/lib/email';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const mongoClient = await clientPromise;
-      const db = mongoClient.db();
+      const client = await clientPromise;
+      const db = client.db();
 
       const users = await db.collection('users').find().toArray();
 
@@ -15,21 +15,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const bookmarks = await getBookmarks();
         const subscribers = await db.collection('subscriptions').find({ username: user.username }).toArray();
 
-        let bookmarkListItems = '<li>No bookmarks this week.</li>';
-        if (bookmarks.data && bookmarks.meta?.result_count > 0) {
-          bookmarkListItems = bookmarks.data.map((bookmark: any) => `
-            <li>
-              <a href="https://twitter.com/user/status/${bookmark.id}">${bookmark.text}</a>
-              <br>
-              by ${bookmark.author?.name} (@${bookmark.author?.username})
-            </li>
-          `).join('');
-        }
-
         const emailContent = `
           <h1>Weekly Twitter Bookmarks from ${user.name}</h1>
           <ul>
-            ${bookmarkListItems}
+            ${Array.isArray(bookmarks.data) ? bookmarks.data.map((bookmark: any) => `
+              <li>
+                <a href="https://twitter.com/user/status/${bookmark.id}">${bookmark.text}</a>
+                <br>
+                by ${bookmark.author?.name} (@${bookmark.author?.username})
+              </li>
+            `).join('') : 'No bookmarks this week.'}
           </ul>
         `;
 
