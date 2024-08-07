@@ -69,7 +69,7 @@ export default function UserPage() {
             </button>
           </form>
         ) : (
-          <p className="text-green-600 font-bold mb-8">Successfully subscribed!</p>
+          <p className="text-green-600 font-bold mb-8">Subscribed!</p>
         )}
         
         <button
