@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import confetti from 'canvas-confetti';
 
 export default function UserPage() {
   const params = useParams();
@@ -11,10 +12,16 @@ export default function UserPage() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
 
+  useEffect(() => {
+    console.log('UserPage mounted. Username:', username);
+    confetti();
+  }, [username]);
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement subscription logic
+    console.log('Subscribing with email:', email);
     setIsSubscribed(true);
+    confetti();
   };
 
   const handleShare = () => {
@@ -23,66 +30,83 @@ export default function UserPage() {
       navigator.clipboard.writeText(url);
       setIsLinkCopied(true);
       setTimeout(() => setIsLinkCopied(false), 2000);
+      console.log('Sharing URL:', url);
     }
   };
 
   if (!username) {
+    console.log('No username found in params');
     return <div>User not found</div>;
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
-      <Image
-        src="/placeholder-avatar.png"
-        alt="User avatar"
-        width={100}
-        height={100}
-        className="rounded-full mb-4"
-      />
-      <h1 className="text-2xl font-bold mb-2">{username}</h1>
-      <p className="text-gray-600 italic mb-8">User bio goes here</p>
-      
-      {!isSubscribed ? (
-        <form onSubmit={handleSubscribe} className="w-full max-w-md">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="w-full px-4 py-2 mb-4 border rounded"
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-2 px-4 rounded"
-          >
-            Subscribe
-          </button>
-        </form>
-      ) : (
-        <p className="text-green-600 font-bold mb-8">Successfully subscribed!</p>
-      )}
-      
-      <button
-        onClick={handleShare}
-        className="mt-8 flex flex-col items-center"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+    <div className="min-h-screen flex flex-col bg-white text-gray-900">
+      <main className="flex-grow flex flex-col items-center justify-center p-4">
+        <Image
+          src="/placeholder-avatar.png"
+          alt="User avatar"
+          width={100}
+          height={100}
+          className="rounded-full mb-4"
+        />
+        <h1 className="text-2xl font-bold mb-2">{username}</h1>
+        <p className="text-gray-600 italic mb-8">User bio goes here</p>
+        
+        {!isSubscribed ? (
+          <form onSubmit={handleSubscribe} className="w-full max-w-md">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full px-4 py-2 mb-4 border rounded"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
+            >
+              Subscribe
+            </button>
+          </form>
+        ) : (
+          <p className="text-green-600 font-bold mb-8">Successfully subscribed!</p>
+        )}
+        
+        <button
+          onClick={handleShare}
+          className="mt-8 flex flex-col items-center"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-          />
-        </svg>
-        <span className="mt-1">{isLinkCopied ? 'Copied!' : 'Share'}</span>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+            />
+          </svg>
+          <span className="mt-1">{isLinkCopied ? 'Copied!' : 'Share'}</span>
+        </button>
+      </main>
+      <footer className="py-4 text-center">
+        <p>
+          Built with Claude by{' '}
+          <a
+            href="https://x.com/Must_be_Ash"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            @must_be_ash
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }

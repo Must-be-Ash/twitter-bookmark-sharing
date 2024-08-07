@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+const nextConfig = {
+    reactStrictMode: true,
+    images: {
+      domains: ['pbs.twimg.com'], // Add other domains if needed
+    },
+  }
+  
+  module.exports = nextConfig
