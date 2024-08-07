@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function LandingPage() {
   const handleTwitterLogin = () => {
-    signIn('twitter', { callbackUrl: `${window.location.origin}/api/auth/callback/twitter` });
+    signIn('twitter');
   };
 
   return (
