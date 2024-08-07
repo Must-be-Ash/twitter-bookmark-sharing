@@ -1,4 +1,4 @@
-import { TwitterApi } from 'twitter-api-v2';
+import { TwitterApi, TweetV2, UserV2 } from 'twitter-api-v2';
 
 const client = new TwitterApi(process.env.TWITTER_BEARER_TOKEN!);
 
@@ -17,7 +17,11 @@ export async function getUserByUsername(username: string) {
   }
 }
 
-export async function getBookmarks() {
+export async function getBookmarks(): Promise<{
+  data: TweetV2[];
+  includes: { users: UserV2[] };
+  meta: { result_count: number };
+}> {
   try {
     const bookmarks = await client.v2.bookmarks({
       expansions: ['author_id'],
