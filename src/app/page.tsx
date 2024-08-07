@@ -1,19 +1,9 @@
 "use client";
 
-import { useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function LandingPage() {
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      document.querySelector('#dynamic-gradient')?.classList.toggle('bg-gradient-to-r');
-      document.querySelector('#dynamic-gradient')?.classList.toggle('bg-gradient-to-l');
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   const handleTwitterLogin = () => {
     signIn('twitter');
   };
