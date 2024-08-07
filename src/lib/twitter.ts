@@ -2,7 +2,7 @@ import { TwitterApi } from 'twitter-api-v2';
 
 const client = new TwitterApi(process.env.TWITTER_BEARER_TOKEN!);
 
-export async function getBookmarks(userId: string) {
+export async function getBookmarks() {
   try {
     const bookmarks = await client.v2.bookmarks({
       'tweet.fields': ['text', 'author_id', 'created_at'],
@@ -10,7 +10,8 @@ export async function getBookmarks(userId: string) {
       'user.fields': ['name', 'username'],
     });
 
-    console.log(`Fetched ${bookmarks.data.length} bookmarks`);
+    const bookmarkCount = Array.isArray(bookmarks.data) ? bookmarks.data.length : 0;
+    console.log(`Fetched ${bookmarkCount} bookmarks`);
 
     return bookmarks;
   } catch (error) {
