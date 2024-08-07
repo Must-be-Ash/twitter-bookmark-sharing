@@ -1,36 +1,109 @@
 'use client';
 
-import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import confetti from 'canvas-confetti';
 
-export default function Home() {
-  const handleSignIn = () => {
-    signIn('twitter');
+export default function UserPage() {
+  const params = useParams();
+  const username = params?.username as string | undefined;
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isLinkCopied, setIsLinkCopied] = useState(false);
+
+  useEffect(() => {
+    // Trigger confetti when the page loads (User A has connected their Twitter)
+    confetti();
+  }, []);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Implement subscription logic
+    setIsSubscribed(true);
+    // Trigger confetti when User B subscribes
+    confetti();
   };
 
+  const handleShare = () => {
+    if (username) {
+      const url = `${process.env.NEXT_PUBLIC_APP_URL}/${username}`;
+      navigator.clipboard.writeText(url);
+      setIsLinkCopied(true);
+      setTimeout(() => setIsLinkCopied(false), 2000);
+    }
+  };
+
+  if (!username) {
+    return <div>User not found</div>;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-4">
-        <span className="bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-          Grow your email list
-        </span>{' '}
-        by sharing what you&apos;re interested in
-      </h1>
-      <p className="text-xl mb-8">
-        Share your Twitter bookmarks as a weekly newsletter. Think Pinterest but for reading material instead of images.
-      </p>
-      <button
-        onClick={handleSignIn}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 animate-pulse"
-      >
-        Login with Twitter
-      </button>
-      <footer className="mt-16">
+    <div className="min-h-screen flex flex-col bg-white text-gray-900">
+      <main className="flex-grow flex flex-col items-center justify-center p-4">
+        <Image
+          src="/placeholder-avatar.png"
+          alt="User avatar"
+          width={100}
+          height={100}
+          className="rounded-full mb-4"
+        />
+        <h1 className="text-2xl font-bold mb-2">{username}</h1>
+        <p className="text-gray-600 italic mb-8">User bio goes here</p>
+        
+        {!isSubscribed ? (
+          <form onSubmit={handleSubscribe} className="w-full max-w-md">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full px-4 py-2 mb-4 border rounded"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
+            >
+              Subscribe
+            </button>
+          </form>
+        ) : (
+          <p className="text-green-600 font-bold mb-8">Successfully subscribed!</p>
+        )}
+        
+        <button
+          onClick={handleShare}
+          className="mt-8 flex flex-col items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+            />
+          </svg>
+          <span className="mt-1">{isLinkCopied ? 'Copied!' : 'Share'}</span>
+        </button>
+      </main>
+      <footer className="py-4 text-center">
         <p>
           Built with Claude by{' '}
-          <Link href="https://x.com/Must_be_Ash" className="text-blue-400 hover:underline">
+          <a
+            href="https://x.com/Must_be_Ash"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
             @must_be_ash
-          </Link>
+          </a>
         </p>
       </footer>
     </div>
