@@ -6,7 +6,7 @@ export async function sendWeeklyNewsletter(to: string, from: string, content: st
   const msg = {
     to,
     from,
-    subject: 'Your Weekly Twitter Bookmarks Digest',
+    subject: 'Your Weekly Twitter Bookmarks',
     html: content,
   };
 
