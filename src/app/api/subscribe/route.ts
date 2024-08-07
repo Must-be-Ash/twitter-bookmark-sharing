@@ -1,33 +1,29 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { email, username } = req.body;
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { email, username } = body;
 
-    if (!email || !username) {
-      return res.status(400).json({ error: 'Email and username are required' });
-    }
+  if (!email || !username) {
+    return NextResponse.json({ error: 'Email and username are required' }, { status: 400 });
+  }
 
-    try {
-      const client = await clientPromise;
-      const db = client.db();
+  try {
+    const client = await clientPromise;
+    const db = client.db();
 
-      const result = await db.collection('subscriptions').insertOne({
-        email,
-        username,
-        createdAt: new Date(),
-      });
+    const result = await db.collection('subscriptions').insertOne({
+      email,
+      username,
+      createdAt: new Date(),
+    });
 
-      console.log(`New subscription added: ${result.insertedId}`);
+    console.log(`New subscription added: ${result.insertedId}`);
 
-      res.status(201).json({ message: 'Subscription added successfully' });
-    } catch (error) {
-      console.error('Error adding subscription:', error);
-      res.status(500).json({ error: 'Error adding subscription' });
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return NextResponse.json({ message: 'Subscription added successfully' }, { status: 201 });
+  } catch (error) {
+    console.error('Error adding subscription:', error);
+    return NextResponse.json({ error: 'Error adding subscription' }, { status: 500 });
   }
 }
