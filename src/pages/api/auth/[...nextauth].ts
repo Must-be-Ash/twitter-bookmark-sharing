@@ -24,32 +24,48 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log("Sign In Callback", { user, account, profile, email });
-      return true;
-    },
-    async redirect({ url, baseUrl }) {
-      console.log("Redirect Callback", { url, baseUrl });
-      return baseUrl;
-    },
-    async session({ session, user, token }) {
-      console.log("Session Callback", { session, user, token });
-      if (session.user) {
-        session.user.id = user.id;
+    async signIn({ user, account, profile }) {
+      console.log("Sign In Callback Started", { user, account, profile });
+      try {
+        // You can add custom logic here if needed
+        console.log("Sign In Successful");
+        return true;
+      } catch (error) {
+        console.error("Sign In Error:", error);
+        return false;
       }
-      return session;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
-      console.log("JWT Callback", { token, user, account, profile, isNewUser });
-      return token;
-    }
+    async session({ session, user }) {
+      console.log("Session Callback Started", { session, user });
+      try {
+        if (session.user) {
+          session.user.id = user.id;
+        }
+        console.log("Session Callback Completed");
+        return session;
+      } catch (error) {
+        console.error("Session Callback Error:", error);
+        return session;
+      }
+    },
   },
   events: {
-    async signIn(message) { console.log("signIn", message) },
-    async signOut(message) { console.log("signOut", message) },
-    async createUser(message) { console.log("createUser", message) },
-    async linkAccount(message) { console.log("linkAccount", message) },
-    async session(message) { console.log("session", message) },
+    async signIn(message) { console.log("Sign In Event", message) },
+    async signOut(message) { console.log("Sign Out Event", message) },
+    async createUser(message) { console.log("Create User Event", message) },
+    async linkAccount(message) { console.log("Link Account Event", message) },
+    async session(message) { console.log("Session Event", message) },
+  },
+  logger: {
+    error(code, metadata) {
+      console.error(code, metadata)
+    },
+    warn(code) {
+      console.warn(code)
+    },
+    debug(code, metadata) {
+      console.debug(code, metadata)
+    }
   },
   debug: true,
 };
