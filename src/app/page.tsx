@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from 'react';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function LandingPage() {
@@ -13,21 +14,8 @@ export default function LandingPage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleTwitterLogin = async () => {
-    try {
-      const response = await fetch('/api/auth/signin/twitter', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Error initiating Twitter login:', error);
-    }
+  const handleTwitterLogin = () => {
+    signIn('twitter');
   };
 
   return (
