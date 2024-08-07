@@ -1,7 +1,15 @@
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
+
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+    } & DefaultSession["user"]
+  }
+}
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
@@ -13,8 +21,10 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      session.user.id = user.id;
+    session: async ({ session, user }) => {
+      if (session?.user) {
+        session.user.id = user.id;
+      }
       return session;
     },
   },
