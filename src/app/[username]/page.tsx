@@ -18,25 +18,17 @@ export default function UserPage() {
 
   useEffect(() => {
     async function fetchUserData() {
-      const username = params?.username;
-      if (!username) {
-        console.error('Username is undefined');
-        return;
-      }
-
-      const response = await fetch(`/api/user/${username}`);
+      const response = await fetch(`/api/user/${params.username}`);
       if (response.ok) {
         const data = await response.json();
         setUserData(data);
-      } else {
-        console.error('Failed to fetch user data');
       }
     }
 
     if (session?.accessToken) {
       fetchUserData();
     }
-  }, [session, params]);
+  }, [session, params.username]);
 
   if (!userData) {
     return <div>Loading user data...</div>;
