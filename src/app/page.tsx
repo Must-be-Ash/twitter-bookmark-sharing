@@ -10,20 +10,23 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.user?.username) {
+    if (status === 'authenticated' && session?.user?.username) {
       router.push(`/${session.user.username}`);
     }
-  }, [session, router]);
+  }, [session, status, router]);
 
   if (status === "loading") {
     return <p>Loading...</p>;
   }
 
-  if (!session) {
+  if (status === 'unauthenticated') {
     return (
       <div>
-        <p>Not signed in</p>
-        <Link href="/auth/signin">Sign in with Twitter</Link>
+        <h1>Welcome to Twitter Bookmark Sharing</h1>
+        <p>Sign in to get started:</p>
+        <Link href="/api/auth/signin">
+          <button>Sign in with Twitter</button>
+        </Link>
       </div>
     );
   }

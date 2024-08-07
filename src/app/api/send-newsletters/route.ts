@@ -47,7 +47,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log('Weekly newsletters sent successfully');
     return NextResponse.json({ message: 'Weekly newsletters sent successfully' });
   } catch (error) {
     console.error('Error sending weekly newsletters:', error);
