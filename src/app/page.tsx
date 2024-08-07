@@ -13,7 +13,7 @@ export default function LandingPage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleTwitterLogin = () => {
+  const handleTwitterLogin = async () => {
     window.location.href = '/api/auth/signin/twitter';
   };
 
