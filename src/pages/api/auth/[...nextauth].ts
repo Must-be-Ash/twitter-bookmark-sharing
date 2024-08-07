@@ -1,17 +1,9 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
 
-declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
-      id: string;
-    } & DefaultSession["user"]
-  }
-}
-
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     TwitterProvider({
@@ -21,11 +13,64 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    session: async ({ session, user }) => {
-      if (session?.user) {
-        session.user.id = user.id;
+    async signIn({ user, account, profile }) {
+      console.log("Sign in callback started");
+      try {
+        // You can add custom logic here, e.g., creating a user in your database
+        console.log("User:", user);
+        console.log("Account:", account);
+        console.log("Profile:", profile);
+        return true;
+      } catch (error) {
+        console.error("Error in signIn callback:", error);
+        return false;
       }
-      return session;
+    },
+    async session({ session, user }) {
+      console.log("Session callback started");
+      try {
+        if (session.user) {
+          session.user.id = user.id;
+        }
+        console.log("Session:", session);
+        return session;
+      } catch (error) {
+        console.error("Error in session callback:", error);
+        return session;
+      }
+    },
+    async jwt({ token, user, account }) {
+      console.log("JWT callback started");
+      try {
+        if (account) {
+          token.accessToken = account.access_token;
+        }
+        console.log("JWT Token:", token);
+        return token;
+      } catch (error) {
+        console.error("Error in jwt callback:", error);
+        return token;
+      }
     },
   },
-});
+  events: {
+    async signIn(message) {
+      console.log("signIn event:", message);
+    },
+    async signOut(message) {
+      console.log("signOut event:", message);
+    },
+    async createUser(message) {
+      console.log("createUser event:", message);
+    },
+    async linkAccount(message) {
+      console.log("linkAccount event:", message);
+    },
+    async session(message) {
+      console.log("session event:", message);
+    },
+  },
+  debug: true, // Enable debug messages in the console
+};
+
+export default NextAuth(authOptions);
