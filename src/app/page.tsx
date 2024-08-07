@@ -13,8 +13,21 @@ export default function LandingPage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleTwitterLogin = () => {
-    window.location.href = '/api/auth/signin';
+  const handleTwitterLogin = async () => {
+    try {
+      const response = await fetch('/api/auth/signin/twitter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Error initiating Twitter login:', error);
+    }
   };
 
   return (
@@ -23,10 +36,9 @@ export default function LandingPage() {
         <img src="/bookmark.png" alt="Bookmark" className="w-1/4 h-1/4 ml-10 mt-10" />
         <img src="/email.png" alt="Email" className="w-1/4 h-1/4 mr-10 mb-10" />
         <svg className="absolute top-0 left-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-          <path d="M10 10 Q 20 20, 30 10 T 50 10 T 70 10 T 90 10" stroke="black" strokeWidth="0.5" fill="none" />
-          <path d="M10 30 Q 20 40, 30 30 T 50 30 T 70 30 T 90 30" stroke="black" strokeWidth="0.5" fill="none" />
-          <path d="M10 50 Q 20 60, 30 50 T 50 50 T 70 50 T 90 50" stroke="black" strokeWidth="0.5" fill="none" />
-          <path d="M10 70 Q 20 80, 30 70 T 50 70 T 70 70 T 90 70" stroke="black" strokeWidth="0.5" fill="none" />
+          <path d="M10 20 L90 20" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+          <path d="M10 50 L90 50" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+          <path d="M10 80 L90 80" stroke="#d3d3d3" strokeWidth="1" fill="none" />
         </svg>
       </div>
       <main className="flex-grow flex flex-col items-center justify-center p-4 z-10">
