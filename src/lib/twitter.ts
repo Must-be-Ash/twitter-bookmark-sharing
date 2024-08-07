@@ -10,7 +10,7 @@ export async function getBookmarks(userId: string): Promise<BookmarksV2Paginator
       'user.fields': ['name', 'username'],
     });
 
-    console.log(`Fetched ${bookmarks.data.length} bookmarks for user ${userId}`);
+    console.log(`Fetched ${bookmarks.data?.length ?? 0} bookmarks for user ${userId}`);
 
     return bookmarks;
   } catch (error) {
