@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import confetti from 'canvas-confetti';
-import { getUserByUsername } from '@/lib/twitter';
 
 export default function UserPage() {
   const params = useParams();
@@ -23,8 +22,13 @@ export default function UserPage() {
     async function fetchUserData() {
       if (username) {
         try {
-          const data = await getUserByUsername(username);
-          setUserData(data);
+          const response = await fetch(`/api/user/${username}`);
+          if (response.ok) {
+            const data = await response.json();
+            setUserData(data);
+          } else {
+            throw new Error('Failed to fetch user data');
+          }
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
