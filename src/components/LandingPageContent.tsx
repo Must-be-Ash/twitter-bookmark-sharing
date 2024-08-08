@@ -11,7 +11,7 @@ export default function LandingPageContent() {
     setIsPulsing(true);
     setTimeout(() => {
       signIn('twitter');
-    }, 350); // Delay to allow the pulse animation to play
+    }, 250); // Delay to allow the pulse animation to play
   };
 
   return (
@@ -76,19 +76,19 @@ export default function LandingPageContent() {
 
         @keyframes glow {
           from {
-            box-shadow: 0 0 5px -5px #3b82f6;
+            box-shadow: 0 0 10px -5px #3b82f6;
           }
           to {
-            box-shadow: 0 0 20px -5px #3b82f6;
+            box-shadow: 0 0 40px -5px #3b82f6;
           }
         }
 
 @keyframes glow-bright {
   from {
-    box-shadow: 0 0 20px 2px #3b82f6;
+    box-shadow: 0 0 40px 6px #3b82f6;
   }
   to {
-    box-shadow: 0 0 40px 8px #3b82f6;
+    box-shadow: 0 0 80px 12px #3b82f6;
   }
 }
 
