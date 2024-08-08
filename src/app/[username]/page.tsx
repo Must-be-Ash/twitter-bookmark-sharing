@@ -69,8 +69,8 @@ export default function UserPage({ params }: { params: { username: string } }) {
       <Image
           src={userData.profile_image_url || "/placeholder-avatar.png"}
           alt="User avatar"
-          width={75}  // Reduced from 100
-          height={75} // Reduced from 100
+          width={80}  // Reduced from 100
+          height={80} // Reduced from 100
           className="rounded-full mb-4"
         />
         <h1 className="text-2xl font-bold mb-2">{userData.name}</h1>
