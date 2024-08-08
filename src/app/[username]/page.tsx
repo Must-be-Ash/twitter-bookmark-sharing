@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import confetti from 'canvas-confetti';
 import { getUserByUsername, UserData } from '@/lib/twitter';
+import LoadingAnimation from '@/components/LoadingAnimation';
 
 export default function UserPage({ params }: { params: { username: string } }) {
   const username = params.username;
@@ -22,7 +23,6 @@ export default function UserPage({ params }: { params: { username: string } }) {
     console.log("UserPage mounted. Username:", username);
     confetti();
 
-    // Redirect if the username in the URL doesn't match the logged-in user
     if (status === 'authenticated' && session?.user?.username && session.user.username !== username) {
       router.push(`/${session.user.username}`);
       return;
@@ -44,7 +44,19 @@ export default function UserPage({ params }: { params: { username: string } }) {
     }
 
     fetchUserData();
-  },  [username, session, status, router]);
+  }, [username, session, status, router]);
+
+  if (loading) {
+    return <LoadingAnimation />;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center h-screen bg-white text-red-500">{error}</div>;
+  }
+
+  if (!userData) {
+    return <div className="flex justify-center items-center h-screen bg-white text-gray-500">No user data available.</div>;
+  }
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
