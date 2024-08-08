@@ -63,14 +63,6 @@ export default function LandingPageContent() {
           animation: glow 1.5s ease-in-out infinite alternate;
         }
 
-        @keyframes glow {
-          from {
-            box-shadow: 0 0 5px -5px #3b82f6;
-          }
-          to {
-            box-shadow: 0 0 20px -5px #3b82f6;
-          }
-        }
       `}</style>
     </div>
   );
