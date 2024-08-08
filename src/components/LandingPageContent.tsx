@@ -1,11 +1,15 @@
-'use client';
-
+import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function LandingPageContent() {
+  const [isPulsing, setIsPulsing] = useState(false);
+
   const handleTwitterLogin = () => {
-    signIn('twitter');
+    setIsPulsing(true);
+    setTimeout(() => {
+      signIn('twitter');
+    }, 1000); // Delay to allow the pulse animation to play
   };
 
   return (
@@ -25,9 +29,9 @@ export default function LandingPageContent() {
         <p className="text-gray-600 text-center mb-14 max-w-md">
           Share your Twitter bookmarks as a weekly newsletter. Think Pinterest, but for tweets.
         </p>
-        <button 
+   <button 
           onClick={handleTwitterLogin} 
-          className="flex items-center px-6 py-2 text-white font-bold rounded transition-all duration-300 focus:outline-none focus:ring focus:ring-blue-300 animated-gradient glow-pulse mt-4">
+          className="flex items-center px-6 py-2 text-white font-bold rounded transition-all duration-300 focus:outline-none focus:ring focus:ring-blue-300 bg-blue-500 glow-pulse hover:glow-pulse-bright mt-4">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0017 3a4.48 4.48 0 00-4.52 4.48 5.06 5.06 0 00.11 1.02A12.94 12.94 0 013 4s-4 9 5 13a13.38 13.38 0 01-7 2c9 5.8 20 0 20-11.5a4.48 4.48 0 00-.08-.83A8.1 8.1 0 0023 3z" />
           </svg>
@@ -39,6 +43,8 @@ export default function LandingPageContent() {
           Built with Claude by <Link href="https://x.com/Must_be_Ash"><a className="text-blue-500">@must_be_ash</a></Link>
         </p>
       </footer>
+
+      {isPulsing && <div className="fixed inset-0 bg-blue-500 animate-pulse-expand z-50"></div>}
 
       <style jsx>{`
         .animated-gradient {
@@ -63,6 +69,10 @@ export default function LandingPageContent() {
           animation: glow 1.5s ease-in-out infinite alternate;
         }
 
+        .glow-pulse-bright {
+          animation: glow-bright 1.5s ease-in-out infinite alternate;
+        }
+
         @keyframes glow {
           from {
             box-shadow: 0 0 5px -5px #3b82f6;
@@ -70,6 +80,30 @@ export default function LandingPageContent() {
           to {
             box-shadow: 0 0 20px -5px #3b82f6;
           }
+        }
+
+        @keyframes glow-bright {
+          from {
+            box-shadow: 0 0 10px -5px #3b82f6;
+          }
+          to {
+            box-shadow: 0 0 30px -5px #3b82f6;
+          }
+        }
+
+        @keyframes pulse-expand {
+          0% {
+            opacity: 0;
+            transform: scale(0);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .animate-pulse-expand {
+          animation: pulse-expand 1s ease-out forwards;
         }
       `}</style>
     </div>

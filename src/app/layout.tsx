@@ -2,6 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
 import { SessionProviderWrapper } from '@/app/SessionProviderWrapper'
+import { Analytics } from "@vercel/analytics/react"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function RootLayout({
         <SessionProviderWrapper>
           {children}
         </SessionProviderWrapper>
+        <Analytics />
       </body>
     </html>
   )
