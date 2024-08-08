@@ -1,21 +1,11 @@
 'use client';
 
-import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function LandingPageContent() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  const handleTwitterLogin = async () => {
-    if (session?.user?.username) {
-      // If already logged in, redirect to user's profile
-      router.push(`/${session.user.username}`);
-    } else {
-      // Otherwise, initiate login
-      await signIn('twitter');
-    }
+  const handleTwitterLogin = () => {
+    signIn('twitter');
   };
 
   return (
@@ -26,7 +16,7 @@ export default function LandingPageContent() {
           Share your bookmarks and <span id="dynamic-gradient" className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">grow your email list</span>
         </h1>
         <p className="text-gray-600 text-center mb-14 max-w-md">
-          Share your Twitter bookmarks as a weekly newsletter. Think Pinterest but for reading material instead of images.
+          Share your Twitter bookmarks as a weekly newsletter. Kinda like Pinterest, but different.
         </p>
         <button 
           onClick={handleTwitterLogin} 
@@ -34,13 +24,8 @@ export default function LandingPageContent() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0017 3a4.48 4.48 0 00-4.52 4.48 5.06 5.06 0 00.11 1.02A12.94 12.94 0 013 4s-4 9 5 13a13.38 13.38 0 01-7 2c9 5.8 20 0 20-11.5a4.48 4.48 0 00-.08-.83A8.1 8.1 0 0023 3z" />
           </svg>
-          {session ? 'Go to Profile' : 'Log in with Twitter'}
+          Log in with Twitter
         </button>
-        {session && (
-          <p className="mt-4 text-gray-600">
-            Logged in as {session.user?.name}. <button onClick={() => signIn('twitter')} className="text-blue-500 underline">Switch account</button>
-          </p>
-        )}
       </main>
       <footer className="text-center py-4 z-10">
         <p className="text-gray-600">
