@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import confetti from 'canvas-confetti';
+import { getUserByUsername } from '@/lib/twitter';
 
-export default function UserPage() {
-  const params = useParams();
-  const username = params?.username as string;
+export default function UserPage({ params }: { params: { username: string } }) {
+  const username = params.username;
   const { data: session, status } = useSession();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -25,13 +24,12 @@ export default function UserPage() {
       if (username) {
         try {
           setLoading(true);
-          const response = await fetch(`/api/user/${username}`);
-          if (response.ok) {
-            const data = await response.json();
-            setUserData(data);
-          } else {
-            throw new Error('Failed to fetch user data');
+          const accessToken = session?.accessToken || process.env.NEXT_PUBLIC_TWITTER_BEARER_TOKEN;
+          if (!accessToken) {
+            throw new Error('No access token available');
           }
+          const data = await getUserByUsername(accessToken, username);
+          setUserData(data);
         } catch (error) {
           console.error("Error fetching user data:", error);
           setError('Failed to load user data. Please try again.');
@@ -42,7 +40,7 @@ export default function UserPage() {
     }
 
     fetchUserData();
-  }, [username]);
+  }, [username, session]);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +71,10 @@ export default function UserPage() {
 
   if (loading) {
     return <div>Loading user data...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
   if (!userData) {

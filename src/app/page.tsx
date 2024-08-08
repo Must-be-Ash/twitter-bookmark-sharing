@@ -1,12 +1,24 @@
 "use client";
 
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LandingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session?.user?.name) {
+      router.push(`/${session.user.name}`);
+    }
+  }, [session, router]);
+
   const handleTwitterLogin = () => {
     signIn('twitter');
   };
+
 
   return (
     <div className="relative min-h-screen bg-white flex flex-col justify-between">

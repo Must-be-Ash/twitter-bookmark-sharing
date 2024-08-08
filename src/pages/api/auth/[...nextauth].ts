@@ -1,8 +1,15 @@
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
+import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
+    accessToken?: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
     accessToken?: string;
   }
 }
@@ -16,21 +23,27 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    
     async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token;
       }
       return token;
     },
-
-    async session({ session, token, user }) {
-      session.accessToken = token.accessToken as string;
+    async session({ session, token }) {
+      session.accessToken = token.accessToken;
       return session;
     },
-    
+    async redirect({ url, baseUrl }) {
+      // Custom redirect to user's profile page after login
+      if (url.startsWith(baseUrl)) {
+        return `${baseUrl}/${url.split('/').pop()}`;
+      }
+      return url;
+    },
   },
-  debug: process.env.NODE_ENV === "development",
+  pages: {
+    signIn: "/auth/signin",
+  },
 };
 
 export default NextAuth(authOptions);

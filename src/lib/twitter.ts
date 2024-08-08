@@ -6,8 +6,16 @@ export interface BookmarksResponse {
   meta: { result_count: number };
 }
 
-export async function getUserByUsername(accessToken: string, username: string) {
-  const client = new TwitterApi(accessToken);
+export interface UserData {
+  id: string;
+  name: string;
+  username: string;
+  profile_image_url?: string;
+  description?: string;
+}
+
+export async function getUserByUsername(token: string, username: string): Promise<UserData> {
+  const client = new TwitterApi(token);
   try {
     console.log(`Fetching user data for username: ${username}`);
     const user = await client.v2.userByUsername(username, {
@@ -45,4 +53,8 @@ export async function getBookmarks(accessToken: string): Promise<BookmarksRespon
     console.error('Error fetching bookmarks:', error);
     throw error;
   }
+}
+
+export function createTwitterClient(token: string): TwitterApi {
+  return new TwitterApi(token);
 }
