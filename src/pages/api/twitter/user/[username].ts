@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next';
 import { TwitterApi } from 'twitter-api-v2';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -14,7 +14,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       'user.fields': ['name', 'username', 'profile_image_url', 'description'],
     });
 
-    res.status(200).json(user.data);
+    if (user.data) {
+      res.status(200).json(user.data);
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
   } catch (error) {
     console.error(`Error fetching user data for ${username}:`, error);
     res.status(500).json({ error: 'Failed to fetch user data' });

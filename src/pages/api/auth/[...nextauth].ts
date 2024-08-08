@@ -1,16 +1,20 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import TwitterProvider from "next-auth/providers/twitter";
-import { JWT } from "next-auth/jwt";
 
+import NextAuth, { NextAuthOptions, User } from "next-auth";
+import TwitterProvider from "next-auth/providers/twitter";
+
+// Extend the built-in session types
 declare module "next-auth" {
   interface Session {
-    accessToken?: string;
+    user: User & {
+      username?: string;
+    };
   }
 }
 
+// Extend the built-in token types
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string;
+    username?: string;
   }
 }
 
@@ -23,26 +27,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, account, profile }) {
+      if (account && profile) {
+        token.username = (profile as any).data.username;
       }
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
+      if (token.username) {
+        session.user.username = token.username;
+      }
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Custom redirect to user's profile page after login
-      if (url.startsWith(baseUrl)) {
-        return `${baseUrl}/${url.split('/').pop()}`;
-      }
-      return url;
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     },
-  },
-  pages: {
-    signIn: "/auth/signin",
   },
 };
 

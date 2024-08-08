@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import confetti from 'canvas-confetti';
 import { getUserByUsername, UserData } from '@/lib/twitter';
 
 export default function UserPage({ params }: { params: { username: string } }) {
   const username = params.username;
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
@@ -19,6 +21,12 @@ export default function UserPage({ params }: { params: { username: string } }) {
   useEffect(() => {
     console.log("UserPage mounted. Username:", username);
     confetti();
+
+    // Redirect if the username in the URL doesn't match the logged-in user
+    if (status === 'authenticated' && session?.user?.username && session.user.username !== username) {
+      router.push(`/${session.user.username}`);
+      return;
+    }
 
     async function fetchUserData() {
       if (username) {
@@ -36,7 +44,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
     }
 
     fetchUserData();
-  }, [username]);
+  },  [username, session, status, router]);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
