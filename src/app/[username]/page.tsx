@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import confetti from 'canvas-confetti';
 import { getUserByUsername, UserData } from '@/lib/twitter';
 import LoadingAnimation from '@/components/LoadingAnimation';
+import Link from 'next/link';
 
 export default function UserPage({ params }: { params: { username: string } }) {
   const username = params.username;
@@ -76,6 +77,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
             <p className="mb-0">Kick back and watch your email list grow</p>
             <p className="mb-0">We'll send them five of your bookmarks weekly</p>
           </div>
+        
         ) : (
           // Content for viewing other user's profile or when not logged in
           <>
@@ -93,6 +95,9 @@ export default function UserPage({ params }: { params: { username: string } }) {
                   type="submit"
                   className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
                 >
+                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0017 3a4.48 4.48 0 00-4.52 4.48 5.06 5.06 0 00.11 1.02A12.94 12.94 0 013 4s-4 9 5 13a13.38 13.38 0 01-7 2c9 5.8 20 0 20-11.5a4.48 4.48 0 00-.08-.83A8.1 8.1 0 0023 3z" />
+          </svg>
                   Subscribe
                 </button>
               </form>
@@ -123,7 +128,15 @@ export default function UserPage({ params }: { params: { username: string } }) {
           <span className="mt-1">{isLinkCopied ? 'Copied!' : 'Share'}</span>
         </button>
       </main>
+
+      <footer className="text-center py-4 z-10">
+        <p className="text-gray-600">
+          Built with Claude by <Link href="https://x.com/Must_be_Ash"><a className="text-blue-500">@must_be_ash</a></Link>
+        </p>
+      </footer>
     </div>
+    
+
   );
 
   function handleSubscribe(e: React.FormEvent) {
