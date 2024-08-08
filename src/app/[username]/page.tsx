@@ -58,7 +58,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
   
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
-     <div className="absolute inset-0 opacity-20 z-0 flex justify-between items-center">
+     <div className="absolute inset-0 opacity-15 z-0 flex justify-between items-center">
         <svg className="absolute top-0 left-0 w-full h-full transform rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
           <path d="M0 20 Q 10 30, 20 20 T 40 20 T 60 20 T 80 20 T 100 20" stroke="#d3d3d3" strokeWidth="1" fill="none" />
           <path d="M0 50 Q 10 60, 20 50 T 40 50 T 60 50 T 80 50 T 100 50" stroke="#d3d3d3" strokeWidth="1" fill="none" />
@@ -66,11 +66,11 @@ export default function UserPage({ params }: { params: { username: string } }) {
         </svg>
       </div>
       <main className="flex-grow flex flex-col items-center justify-center p-4">
-        <Image
+      <Image
           src={userData.profile_image_url || "/placeholder-avatar.png"}
           alt="User avatar"
-          width={100}
-          height={100}
+          width={75}  // Reduced from 100
+          height={75} // Reduced from 100
           className="rounded-full mb-4"
         />
         <h1 className="text-2xl font-bold mb-2">{userData.name}</h1>
