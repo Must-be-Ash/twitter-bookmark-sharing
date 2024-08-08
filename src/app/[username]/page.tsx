@@ -58,6 +58,15 @@ export default function UserPage({ params }: { params: { username: string } }) {
   
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
+      <div className="absolute inset-0 opacity-10 z-0 flex justify-between items-center">
+        <img src="/bookmark.png" alt="Bookmark" className="w-1/4 h-1/4 ml-10 mt-10" />
+        <img src="/email.png" alt="Email" className="w-1/4 h-1/4 mr-10 mb-10" />
+        <svg className="absolute top-0 left-0 w-full h-full transform rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <path d="M0 20 Q 10 30, 20 20 T 40 20 T 60 20 T 80 20 T 100 20" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+          <path d="M0 50 Q 10 60, 20 50 T 40 50 T 60 50 T 80 50 T 100 50" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+          <path d="M0 80 Q 10 90, 20 80 T 40 80 T 60 80 T 80 80 T 100 80" stroke="#d3d3d3" strokeWidth="1" fill="none" />
+        </svg>
+      </div>
       <main className="flex-grow flex flex-col items-center justify-center p-4">
         <Image
           src={userData.profile_image_url || "/placeholder-avatar.png"}
@@ -95,9 +104,6 @@ export default function UserPage({ params }: { params: { username: string } }) {
                   type="submit"
                   className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
                 >
-                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0017 3a4.48 4.48 0 00-4.52 4.48 5.06 5.06 0 00.11 1.02A12.94 12.94 0 013 4s-4 9 5 13a13.38 13.38 0 01-7 2c9 5.8 20 0 20-11.5a4.48 4.48 0 00-.08-.83A8.1 8.1 0 0023 3z" />
-          </svg>
                   Subscribe
                 </button>
               </form>
