@@ -39,6 +39,26 @@ export default function LandingPageContent() {
           Built with Claude by <Link href="https://x.com/Must_be_Ash"><a className="text-blue-500">@must_be_ash</a></Link>
         </p>
       </footer>
+
+      <style jsx>{`
+        .animated-gradient {
+          background: linear-gradient(-45deg, #3b82f6, #2563eb, #1d4ed8, #1e40af);
+          background-size: 400% 400%;
+          animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
