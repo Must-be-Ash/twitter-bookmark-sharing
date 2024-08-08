@@ -11,9 +11,7 @@ export default function LandingPageContent() {
   return (
     <div className="relative min-h-screen bg-white flex flex-col justify-between">
       {/* Your existing landing page content */}
-      <div className="absolute inset-0 opacity-10 z-0 flex justify-between items-center">
-        <img src="/bookmark.png" alt="Bookmark" className="w-1/4 h-1/4 ml-10 mt-10" />
-        <img src="/email.png" alt="Email" className="w-1/4 h-1/4 mr-10 mb-10" />
+      <div className="absolute inset-0 opacity-20 z-0 flex justify-between items-center">
         <svg className="absolute top-0 left-0 w-full h-full transform rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
           <path d="M0 20 Q 10 30, 20 20 T 40 20 T 60 20 T 80 20 T 100 20" stroke="#d3d3d3" strokeWidth="1" fill="none" />
           <path d="M0 50 Q 10 60, 20 50 T 40 50 T 60 50 T 80 50 T 100 50" stroke="#d3d3d3" strokeWidth="1" fill="none" />
