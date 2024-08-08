@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
@@ -14,7 +16,6 @@ export default function LandingPageContent() {
 
   return (
     <div className="relative min-h-screen bg-white flex flex-col justify-between">
-      {/* Your existing landing page content */}
       <div className="absolute inset-0 opacity-15 z-0 flex justify-between items-center">
         <svg className="absolute top-0 left-0 w-full h-full transform rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
           <path d="M0 20 Q 10 30, 20 20 T 40 20 T 60 20 T 80 20 T 100 20" stroke="#d3d3d3" strokeWidth="1" fill="none" />
@@ -24,12 +25,12 @@ export default function LandingPageContent() {
       </div>
       <main className="flex-grow flex flex-col items-center justify-center p-4 z-10">
         <h1 className="text-4xl font-bold mb-4 text-center" style={{ color: '#333333' }}>
-          Share your bookmarks and <span id="dynamic-gradient" className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">grow your email list</span>
+          Share your bookmarks and <span className="animated-gradient text-transparent bg-clip-text">grow your email list</span>
         </h1>
         <p className="text-gray-600 text-center mb-14 max-w-md">
-          Share your Twitter bookmarks as a weekly newsletter. Think Pinterest, but for tweets.
+        Share your Twitter bookmarks as a weekly newsletter. Think Pinterest, but for tweets.
         </p>
-   <button 
+        <button 
           onClick={handleTwitterLogin} 
           className="flex items-center px-6 py-2 text-white font-bold rounded transition-all duration-300 focus:outline-none focus:ring focus:ring-blue-300 bg-blue-500 glow-pulse hover:glow-pulse-bright mt-4">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -40,7 +41,7 @@ export default function LandingPageContent() {
       </main>
       <footer className="text-center py-4 z-10">
         <p className="text-gray-600">
-          Built with Claude by <Link href="https://x.com/Must_be_Ash"><a className="text-blue-500">@must_be_ash</a></Link>
+          Built with Claude by <Link href="https://x.com/Must_be_Ash">@must_be_ash</Link>
         </p>
       </footer>
 
