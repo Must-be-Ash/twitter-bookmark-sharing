@@ -21,19 +21,16 @@ export default function UserPage({ params }: { params: { username: string } }) {
 
   useEffect(() => {
     console.log("UserPage mounted. Username:", username);
-    confetti();
-
-    if (status === 'authenticated' && session?.user?.username && session.user.username !== username) {
-      router.push(`/${session.user.username}`);
-      return;
-    }
-
+    
     async function fetchUserData() {
       if (username) {
         try {
           setLoading(true);
           const data = await getUserByUsername(username);
           setUserData(data);
+          if (status === 'authenticated' && session?.user?.username === username) {
+            confetti(); // Only trigger confetti for the logged-in user's own page
+          }
         } catch (error) {
           console.error("Error fetching user data:", error);
           setError('Failed to load user data. Please try again.');
@@ -44,7 +41,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
     }
 
     fetchUserData();
-  }, [username, session, status, router]);
+  }, [username, session, status]);
 
   if (loading) {
     return <LoadingAnimation />;
@@ -56,45 +53,6 @@ export default function UserPage({ params }: { params: { username: string } }) {
 
   if (!userData) {
     return <div className="flex justify-center items-center h-screen bg-white text-gray-500">No user data available.</div>;
-  }
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Subscribing with email:', email);
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, username }),
-      });
-      if (response.ok) {
-        setIsSubscribed(true);
-        confetti();
-      } else {
-        throw new Error('Subscription failed');
-      }
-    } catch (error) {
-      console.error('Error subscribing:', error);
-    }
-  };
-
-  const handleShare = () => {
-    const url = `${window.location.origin}/${username}`;
-    navigator.clipboard.writeText(url);
-    setIsLinkCopied(true);
-    setTimeout(() => setIsLinkCopied(false), 2000);
-  };
-
-  if (loading) {
-    return <div>Loading user data...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (!userData) {
-    return <div>No user data available.</div>;
   }
   
   return (
@@ -110,25 +68,33 @@ export default function UserPage({ params }: { params: { username: string } }) {
         <h1 className="text-2xl font-bold mb-2">{userData.name}</h1>
         <p className="text-gray-600 italic mb-8">{userData.description || "No bio available"}</p>
         
-        {!isSubscribed ? (
-          <form onSubmit={handleSubscribe} className="w-full max-w-md">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full px-4 py-2 mb-4 border rounded"
-              required
-            />
-            <button
-              type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
-            >
-              Subscribe
-            </button>
-          </form>
+        {status === 'authenticated' && session?.user?.username === username ? (
+          // Content for the logged-in user viewing their own profile
+          <p>Welcome to your profile!</p>
         ) : (
-          <p className="text-green-600 font-bold mb-8">Successfully subscribed!</p>
+          // Content for viewing other user's profile or when not logged in
+          <>
+            {!isSubscribed ? (
+              <form onSubmit={handleSubscribe} className="w-full max-w-md">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full px-4 py-2 mb-4 border rounded"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
+                >
+                  Subscribe
+                </button>
+              </form>
+            ) : (
+              <p className="text-green-600 font-bold mb-8">Successfully subscribed!</p>
+            )}
+          </>
         )}
         
         <button
@@ -154,4 +120,18 @@ export default function UserPage({ params }: { params: { username: string } }) {
       </main>
     </div>
   );
+
+  function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    console.log('Subscribing with email:', email);
+    // Implement subscription logic here
+    setIsSubscribed(true);
+  }
+
+  function handleShare() {
+    const url = `${window.location.origin}/${username}`;
+    navigator.clipboard.writeText(url);
+    setIsLinkCopied(true);
+    setTimeout(() => setIsLinkCopied(false), 2000);
+  }
 }
