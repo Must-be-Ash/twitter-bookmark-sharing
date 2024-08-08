@@ -11,7 +11,7 @@ export default function LandingPageContent() {
     setIsPulsing(true);
     setTimeout(() => {
       signIn('twitter');
-    }, 1000); // Delay to allow the pulse animation to play
+    }, 350); // Delay to allow the pulse animation to play
   };
 
   return (
@@ -41,7 +41,7 @@ export default function LandingPageContent() {
       </main>
       <footer className="text-center py-4 z-10">
         <p className="text-gray-600">
-          Built with Claude by <Link href="https://x.com/Must_be_Ash">@must_be_ash</Link>
+          Built with Claude by <Link href="https://x.com/Must_be_Ash"><a className="text-blue-500">@must_be_ash</a></Link>
         </p>
       </footer>
 
@@ -83,14 +83,14 @@ export default function LandingPageContent() {
           }
         }
 
-        @keyframes glow-bright {
-          from {
-            box-shadow: 0 0 10px -5px #3b82f6;
-          }
-          to {
-            box-shadow: 0 0 30px -5px #3b82f6;
-          }
-        }
+@keyframes glow-bright {
+  from {
+    box-shadow: 0 0 20px 2px #3b82f6;
+  }
+  to {
+    box-shadow: 0 0 40px 8px #3b82f6;
+  }
+}
 
         @keyframes pulse-expand {
           0% {
