@@ -70,7 +70,11 @@ export default function UserPage({ params }: { params: { username: string } }) {
         
         {status === 'authenticated' && session?.user?.username === username ? (
           // Content for the logged-in user viewing their own profile
-          <p>Welcome to your profile!</p>
+          <p>Welcome to your profile!<br></br>
+            1. Share this page with your fans & followers <br></br>
+            2. they'll recieve 5 of your bookmarks weekly as a newsletter<br></br>
+            3. kcik back and watch your email list grow &#129293;
+             </p>
         ) : (
           // Content for viewing other user's profile or when not logged in
           <>
