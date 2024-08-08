@@ -104,7 +104,7 @@ export default function LandingPageContent() {
         }
 
         .animate-pulse-expand {
-          animation: pulse-expand 0.2s ease-out forwards;
+          animation: pulse-expand 0.27s ease-out forwards;
         }
       `}</style>
     </div>
