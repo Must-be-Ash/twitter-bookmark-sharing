@@ -24,8 +24,8 @@ export default function LandingPageContent() {
         </svg>
       </div>
       <main className="flex-grow flex flex-col items-center justify-center p-4 z-10">
-        <h1 className="text-4xl font-bold mb-4 text-center" style={{ color: '#333333' }}>
-          Share your bookmarks and <span className="animated-gradient text-transparent bg-clip-text">grow your email list</span>
+      <h1 className="text-4xl font-bold mb-4 text-center" style={{ color: '#333333' }}>
+          Share your bookmarks and <span id="dynamic-gradient" className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">grow your email list</span>
         </h1>
         <p className="text-gray-600 text-center mb-14 max-w-md">
         Share your Twitter bookmarks as a weekly newsletter. Think Pinterest, but for tweets.
@@ -71,7 +71,7 @@ export default function LandingPageContent() {
         }
 
         .glow-pulse-bright {
-          animation: glow-bright 1.5s ease-in-out infinite alternate;
+          animation: glow-bright 0.5s ease-in-out infinite alternate;
         }
 
         @keyframes glow {
@@ -94,7 +94,7 @@ export default function LandingPageContent() {
 
         @keyframes pulse-expand {
           0% {
-            opacity: 0;
+            opacity: 0.2;
             transform: scale(0);
           }
           100% {
@@ -104,7 +104,7 @@ export default function LandingPageContent() {
         }
 
         .animate-pulse-expand {
-          animation: pulse-expand 1s ease-out forwards;
+          animation: pulse-expand 0.3s ease-out forwards;
         }
       `}</style>
     </div>
