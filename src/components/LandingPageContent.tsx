@@ -11,7 +11,7 @@ export default function LandingPageContent() {
     setIsPulsing(true);
     setTimeout(() => {
       signIn('twitter');
-    }, 250); // Delay to allow the pulse animation to play
+    }, 200); // Delay to allow the pulse animation to play
   };
 
   return (
@@ -104,7 +104,7 @@ export default function LandingPageContent() {
         }
 
         .animate-pulse-expand {
-          animation: pulse-expand 0.3s ease-out forwards;
+          animation: pulse-expand 0.2s ease-out forwards;
         }
       `}</style>
     </div>
