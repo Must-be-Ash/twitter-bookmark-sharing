@@ -29,7 +29,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
           const data = await getUserByUsername(username);
           setUserData(data);
           if (status === 'authenticated' && session?.user?.username === username) {
-            confetti(); // Only trigger confetti for the logged-in user's own page
+            confetti();
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
