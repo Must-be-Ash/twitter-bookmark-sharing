@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import confetti from 'canvas-confetti';
-import { getUserByUsername } from '@/lib/twitter';
+import { getUserByUsername, UserData } from '@/lib/twitter';
 
 export default function UserPage({ params }: { params: { username: string } }) {
   const username = params.username;
@@ -12,7 +12,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,11 +24,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
       if (username) {
         try {
           setLoading(true);
-          const accessToken = session?.accessToken || process.env.NEXT_PUBLIC_TWITTER_BEARER_TOKEN;
-          if (!accessToken) {
-            throw new Error('No access token available');
-          }
-          const data = await getUserByUsername(accessToken, username);
+          const data = await getUserByUsername(username);
           setUserData(data);
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -40,7 +36,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
     }
 
     fetchUserData();
-  }, [username, session]);
+  }, [username]);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
