@@ -31,7 +31,6 @@ export default async function handler(
       const twitterClient = new TwitterApi(user.accessToken);
 
       try {
-        console.log("herere");
         const bookmarksResponse = await twitterClient.v2.bookmarks({
           expansions: ["author_id"],
           "tweet.fields": ["created_at", "public_metrics", "text"],
